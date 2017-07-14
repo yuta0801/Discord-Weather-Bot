@@ -9,7 +9,7 @@ const client = new Discord.Client();
 const token = 'Discord_Token_here';
 var yamaguchi = JSON.parse(fs.readFileSync('./yamaguchi_weather.json', 'utf8'));
 var en = yamaguchi.weather[0].description;
-var en = Morioka.weather[0].description;
+var en = yamaguchi.weather[0].description;
 var ja = translate(en);
 function translate(en){
     switch(en.toLowerCase()){
@@ -111,16 +111,31 @@ client.on('message', message => {
             console.log(e.message);
         });
     }
-    if (message.content === '!山口県の天気') {
-        message.channel.sendMessage('現在の山口県の天気は、'
-        + '```'
-        + '天気: ' + ja + '\n'
-        + '気温: ' + yamaguchi.main.temp + '℃\n'
-        + '風力: ' + yamaguchi.wind.speed + 'm\n'
-        + '風向: ' + yamaguchi.wind.deg + '°\n'
-        + '雲量: ' + yamaguchi.clouds.all + '%\n'
-        + '```'
-        + 'です。')
-     }
+   if (message.content === '!山口県の天気'){
+        message.channel.send({embed: {
+            color: 3447003,
+            author: {
+                name : 'OpenWeat herMap',
+                icon_url : 'https://raw.githubusercontent.com/danyweis/pics4codepen/master/weather/icon/openweathermap.png',
+            },
+                title : '盛岡市のお天気情報',
+                url : 'https://openweathermap.org',
+                description : 'OpenWeatherMapのAPI叩いたデータです。',
+                fields : [{
+                     name : '今日の情報',
+                     value  : '天気 :' + ja + '\n'
+                            + '気温: ' + yamaguchi.main.temp + '°C\n'
+                            + '風力: ' + yamaguchi.wind.speed + 'm\n'
+                            + '風向: ' + yamaguchi.wind.deg + '°\n'
+                            + '雲量: ' + yamaguchi.clouds.all + '%\n'
+                }
+                    ],
+            timestamp : new Date(),
+            footer : {
+                icon_url : 'http://openweathermap.org/img/w/' + yamaguchi_ico +'.png',
+                text : 'This bot is corded by 3mdev. All rights reserved.'
+            }
+        }})
+    }
 })
 client.login(token);
