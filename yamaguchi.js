@@ -114,7 +114,7 @@ client.on('message', message => {
     if (message.content === '!山口県の天気') {
         message.channel.sendMessage('現在の山口県の天気は、'
         + '```'
-        + '天気: ' + yamaguchi.weather[0].description + '\n'
+        + '天気: ' + ja + '\n'
         + '気温: ' + yamaguchi.main.temp + '℃\n'
         + '風力: ' + yamaguchi.wind.speed + 'm\n'
         + '風向: ' + yamaguchi.wind.deg + '°\n'
