@@ -1,16 +1,12 @@
 var fs = require('fs');
-var http = require('http');
-var location = "yamaguchi-ken,jp";
+var req = require('request');
+var geocoder = require('geocoder');
 var units = 'metric';
 var APIKEY = "APIKEY_IS_HERE";
-var URL = 'http://api.openweathermap.org/data/2.5/weather?q='+ location +'&units='+ units +'&appid='+ APIKEY;
+var URL = 'http://api.openweathermap.org/data/2.5/weather?units='+ units +'&appid='+ APIKEY;
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const token = 'Discord_Token_here';
-var yamaguchi = JSON.parse(fs.readFileSync('./yamaguchi_weather.json', 'utf8'));
-var en = yamaguchi.weather[0].description;
-var en = Morioka.weather[0].description;
-var ja = translate(en);
 function translate(en){
     switch(en.toLowerCase()){
         case 'thunderstorm with light rain':ja='雷と弱い雨';break;
@@ -96,31 +92,26 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-    if (message.content === '!天気情報更新') {
-        http.get(URL, function(res) {
-            var body = '';
-            res.setEncoding('utf8');
-            res.on('data', function(chunk) {
-                body += chunk;
+    if (message.content.match(/!.*の天気/)) {
+        var location = message.content.match(/!(.*)の天気/)[1];
+        geocoder.geocode(location, (err, data) => {
+            if (err) console.log(err);
+            var ll = data.results[0].geometry.location;
+            req.get({uri: URL+'&lat='+ll.lat+'&lon='+ll.lon, json: true}, (err, req, data) => {
+                if (err) console.log(e.message);
+                var ja = translate(data.weather[0].description);
+                var weather = data;
+                message.channel.sendMessage('現在の山口県の天気は、'
+                + '```'
+                + '天気: ' + ja + '\n'
+                + '気温: ' + weather.main.temp + '℃\n'
+                + '風力: ' + weather.wind.speed + 'm\n'
+                + '風向: ' + weather.wind.deg + '°\n'
+                + '雲量: ' + weather.clouds.all + '%\n'
+                + '```'
+                + 'です。')
             });
-            res.on('data', function(chunk) {
-                res = JSON.parse(body);
-                fs.writeFile('yamaguchi_weather.json', JSON.stringify(res, null, '   '));
-            });
-        }).on('error', function(e) {
-            console.log(e.message);
         });
-    }
-    if (message.content === '!山口県の天気') {
-        message.channel.sendMessage('現在の山口県の天気は、'
-        + '```'
-        + '天気: ' + ja + '\n'
-        + '気温: ' + yamaguchi.main.temp + '℃\n'
-        + '風力: ' + yamaguchi.wind.speed + 'm\n'
-        + '風向: ' + yamaguchi.wind.deg + '°\n'
-        + '雲量: ' + yamaguchi.clouds.all + '%\n'
-        + '```'
-        + 'です。')
      }
 })
 client.login(token);

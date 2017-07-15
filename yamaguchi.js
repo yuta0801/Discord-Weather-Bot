@@ -3,7 +3,7 @@ var http = require('http');
 var location = "yamaguchi-ken,jp";
 var units = 'metric';
 var APIKEY = "APIKEY_IS_HERE";
-var URL = 'http://api.openweathermap.org/data/2.5/weather?q='+ location +'&units='+ units +'&appid='+ APIKEY;
+var URL = 'http://api.openweathermap.org/data/2.5/weather?units='+ units +'&appid='+ APIKEY;
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const token = 'Discord_Token_here';
@@ -96,46 +96,41 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-    if (message.content === '!天気情報更新') {
-        http.get(URL, function(res) {
-            var body = '';
-            res.setEncoding('utf8');
-            res.on('data', function(chunk) {
-                body += chunk;
+    if (message.content.match(/!.*の天気/)) {
+        var location = message.content.match(/!(.*)の天気/)[1];
+        geocoder.geocode(location, (err, data) => {
+            if (err) console.log(err);
+            var ll = data.results[0].geometry.location;
+            req.get({uri: URL+'&lat='+ll.lat+'&lon='+ll.lon, json: true}, (err, req, data) => {
+                if (err) console.log(e.message);
+                var ja = translate(data.weather[0].description);
+                var weather = data;
+                message.channel.send({embed: {
+                    color: 3447003,
+                    author: {
+                        name : 'OpenWeat herMap',
+                        icon_url : 'https://raw.githubusercontent.com/danyweis/pics4codepen/master/weather/icon/openweathermap.png',
+                    },
+                        title : '盛岡市のお天気情報',
+                        url : 'https://openweathermap.org',
+                        description : 'OpenWeatherMapのAPI叩いたデータです。',
+                        fields : [{
+                             name : '今日の情報',
+                             value  : '天気 :' + ja + '\n'
+                                    + '気温: ' + yamaguchi.main.temp + '°C\n'
+                                    + '風力: ' + yamaguchi.wind.speed + 'm\n'
+                                    + '風向: ' + yamaguchi.wind.deg + '°\n'
+                                    + '雲量: ' + yamaguchi.clouds.all + '%\n'
+                        }
+                            ],
+                    timestamp : new Date(),
+                    footer : {
+                        icon_url : 'http://openweathermap.org/img/w/' + yamaguchi_ico +'.png',
+                        text : 'This bot is corded by 3mdev. All rights reserved.'
+                    }
+                }})
             });
-            res.on('data', function(chunk) {
-                res = JSON.parse(body);
-                fs.writeFile('yamaguchi_weather.json', JSON.stringify(res, null, '   '));
-            });
-        }).on('error', function(e) {
-            console.log(e.message);
         });
-    }
-   if (message.content === '!山口県の天気'){
-        message.channel.send({embed: {
-            color: 3447003,
-            author: {
-                name : 'OpenWeat herMap',
-                icon_url : 'https://raw.githubusercontent.com/danyweis/pics4codepen/master/weather/icon/openweathermap.png',
-            },
-                title : '盛岡市のお天気情報',
-                url : 'https://openweathermap.org',
-                description : 'OpenWeatherMapのAPI叩いたデータです。',
-                fields : [{
-                     name : '今日の情報',
-                     value  : '天気 :' + ja + '\n'
-                            + '気温: ' + yamaguchi.main.temp + '°C\n'
-                            + '風力: ' + yamaguchi.wind.speed + 'm\n'
-                            + '風向: ' + yamaguchi.wind.deg + '°\n'
-                            + '雲量: ' + yamaguchi.clouds.all + '%\n'
-                }
-                    ],
-            timestamp : new Date(),
-            footer : {
-                icon_url : 'http://openweathermap.org/img/w/' + yamaguchi_ico +'.png',
-                text : 'This bot is corded by 3mdev. All rights reserved.'
-            }
-        }})
-    }
+     }
 })
 client.login(token);
