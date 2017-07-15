@@ -105,6 +105,7 @@ client.on('message', message => {
             });
             res.on('data', function(chunk) {
                 res = JSON.parse(body);
+                yamaguchi = res;
                 fs.writeFile('yamaguchi_weather.json', JSON.stringify(res, null, '   '));
             });
         }).on('error', function(e) {
