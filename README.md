@@ -33,16 +33,10 @@ $ node main
 	$ git clone https://github.com/MakotiaFrontia/Discord-Weather-Bot
 	```
 
-1. install
+2. install
 	```
 	$ npm install
 	```
-
-## Anything Else
-
-AnythingAnythingAnything
-AnythingAnythingAnything
-AnythingAnythingAnything
 
 ## Author
 
