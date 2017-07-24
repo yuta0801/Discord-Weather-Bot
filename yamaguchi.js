@@ -111,7 +111,7 @@ client.on('message', message => {
                         name : 'OpenWeat herMap',
                         icon_url : 'https://raw.githubusercontent.com/danyweis/pics4codepen/master/weather/icon/openweathermap.png',
                     },
-                        title : '盛岡市のお天気情報',
+                        title : location+'のお天気情報',
                         url : 'https://openweathermap.org',
                         description : 'OpenWeatherMapのAPI叩いたデータです。',
                         fields : [{
