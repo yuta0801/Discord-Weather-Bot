@@ -15,6 +15,7 @@ client.on('message', message => {
   if (message.content === '!山口県の天気') {
     request(url, {
       method: 'get',
+      json: true,
       qs: {
         q: location,
         units: units,
