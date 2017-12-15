@@ -1,0 +1,30 @@
+{
+  "name": "discord-weather-bot",
+  "version": "1.0.0",
+  "description": "A discord weather bot",
+  "main": "./index",
+  "scripts": {
+    "test": "node ./index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuta0801/Discord-Weather-Bot.git"
+  },
+  "keywords": [
+    "discord",
+    "weather",
+    "bot"
+  ],
+  "contributors": [
+    "mak0tia",
+    "yuta0801"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yuta0801/Discord-Weather-Bot/issues"
+  },
+  "homepage": "https://github.com/yuta0801/Discord-Weather-Bot#readme",
+  "dependencies": {
+    "discord.js": "^11.2.1"
+  }
+}
