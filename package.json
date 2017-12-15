@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/yuta0801/Discord-Weather-Bot#readme",
   "dependencies": {
-    "discord.js": "^11.2.1"
+    "discord.js": "^11.2.1",
+    "dotenv": "^4.0.0"
   }
 }
